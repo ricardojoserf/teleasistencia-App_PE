@@ -10,3 +10,5 @@ Ricardo José Ruiz Fernández
 Luis Vázquez Castaño
 
 Javier Salvador González
+
+Juan Bermudo Mera
