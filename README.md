@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# teleasistencia-App_PE
-Esta es la rama Develop, aquí estará el código antes de ser probado
-=======
 ﻿# teleasistencia-App_PE
 App Android y Procesador de Eventos para un sistema de Teleasistencia
 
@@ -16,4 +12,4 @@ Luis Vázquez Castaño
 Javier Salvador González
 
 Juan Bermudo Mera
->>>>>>> master
+
