@@ -43,9 +43,9 @@ public class Datos {
 	private boolean gas;
 	
 	@Persistent
-	private int telefono;
+	private String imei;
 	@Persistent
-	private int tiempo;
+	private Long tiempo;
 	
 	@Persistent
 	private boolean alarma;
@@ -162,19 +162,19 @@ public class Datos {
 		this.gas = gas;
 	}
 
-	public int getTelefono() {
-		return telefono;
+	public String getImei() {
+		return imei;
 	}
 
-	public void setTelefono(int telefono) {
-		this.telefono = telefono;
+	public void setImei(String imei) {
+		this.imei = imei;
 	}
 
-	public int getTiempo() {
+	public Long getTiempo() {
 		return tiempo;
 	}
 
-	public void setTiempo(int tiempo) {
+	public void setTiempo(Long tiempo) {
 		this.tiempo = tiempo;
 	}
 
@@ -185,6 +185,10 @@ public class Datos {
 	public void setAlarma(boolean alarma) {
 		this.alarma = alarma;
 	}
+
+	
+
+	
 
 		
 }

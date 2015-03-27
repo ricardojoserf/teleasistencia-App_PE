@@ -16,6 +16,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,9 +50,9 @@ public class MainActivity extends Activity {
 	private int tension = 0;
 	private int azucar = 0;
 	private int temperatura = 0;
-	private boolean gas = false;
-	private int telefono = 0;
-	private int tiempo = 0;*/
+	private boolean gas = false;*/
+	private String imei = "";
+	private Long tiempo = (long) 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,12 @@ public class MainActivity extends Activity {
 
 		ImageView imagen = (ImageView) findViewById(R.id.imageView1);
 
+		
+		TelephonyManager mTelephonyManager;
+		mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
+		imei = mTelephonyManager.getDeviceId();
+		
+		
 		boton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -102,6 +111,10 @@ public class MainActivity extends Activity {
 			public void onClick(View view) {
 
 				alarm_flag = true;
+				
+				Time now = new Time();
+				now.setToNow();
+				tiempo = now.toMillis(false);
 
 				new EndpointsTask().execute(getApplicationContext());
 
@@ -171,8 +184,8 @@ public class MainActivity extends Activity {
 				datos.setTemperatura(0);
 				datos.setGas(false);
 
-				datos.setTelefono(0);
-				datos.setTiempo(0);
+				datos.setImei(imei);
+				datos.setTiempo(tiempo);
 
 				datos.setAlarma(alarm_flag);
 
