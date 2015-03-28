@@ -1,0 +1,253 @@
+{
+ "kind": "discovery#rpcDescription",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/fFafF1Y0uWKfvn-YeTw5leDH1ew\"",
+ "discoveryVersion": "v1",
+ "id": "datosendpoint:v1",
+ "name": "datosendpoint",
+ "version": "v1",
+ "description": "This is an API",
+ "ownerDomain": "example.com",
+ "ownerName": "example.com",
+ "packagePath": "app",
+ "icons": {
+  "x16": "http://www.google.com/images/icons/product/search-16.gif",
+  "x32": "http://www.google.com/images/icons/product/search-32.gif"
+ },
+ "protocol": "rpc",
+ "rootUrl": "https://pruebacdps.appspot.com/_ah/api/",
+ "rpcUrl": "https://pruebacdps.appspot.com/_ah/api/rpc",
+ "rpcPath": "/_ah/api/rpc",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "schemas": {
+  "CollectionResponse_Datos": {
+   "id": "CollectionResponse_Datos",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Datos"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "Datos": {
+   "id": "Datos",
+   "type": "object",
+   "properties": {
+    "aceleracion_x": {
+     "type": "number",
+     "format": "float"
+    },
+    "aceleracion_y": {
+     "type": "number",
+     "format": "float"
+    },
+    "aceleracion_z": {
+     "type": "number",
+     "format": "float"
+    },
+    "alarma": {
+     "type": "boolean"
+    },
+    "azucar": {
+     "type": "number",
+     "format": "double"
+    },
+    "gas": {
+     "type": "boolean"
+    },
+    "giroscopio_x": {
+     "type": "number",
+     "format": "float"
+    },
+    "giroscopio_y": {
+     "type": "number",
+     "format": "float"
+    },
+    "giroscopio_z": {
+     "type": "number",
+     "format": "float"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "imei": {
+     "type": "string"
+    },
+    "latitud": {
+     "type": "number",
+     "format": "double"
+    },
+    "longitud": {
+     "type": "number",
+     "format": "double"
+    },
+    "pulso": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "temperatura": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "tension": {
+     "type": "number",
+     "format": "double"
+    },
+    "tiempo": {
+     "type": "string",
+     "format": "int64"
+    }
+   }
+  }
+ },
+ "methods": {
+  "datosendpoint.getDatos": {
+   "id": "datosendpoint.getDatos",
+   "allowGet": true,
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "returns": {
+    "$ref": "Datos"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "datosendpoint.insertDatos": {
+   "id": "datosendpoint.insertDatos",
+   "parameters": {
+    "resource": {
+     "$ref": "Datos"
+    }
+   },
+   "parameterOrder": [
+    "resource"
+   ],
+   "returns": {
+    "$ref": "Datos"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "datosendpoint.listDatos": {
+   "id": "datosendpoint.listDatos",
+   "allowGet": true,
+   "parameters": {
+    "cursor": {
+     "type": "string"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32"
+    }
+   },
+   "returns": {
+    "$ref": "CollectionResponse_Datos"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "datosendpoint.removeDatos": {
+   "id": "datosendpoint.removeDatos",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "datosendpoint.updateDatos": {
+   "id": "datosendpoint.updateDatos",
+   "parameters": {
+    "resource": {
+     "$ref": "Datos"
+    }
+   },
+   "parameterOrder": [
+    "resource"
+   ],
+   "returns": {
+    "$ref": "Datos"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ }
+}
