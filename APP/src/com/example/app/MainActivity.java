@@ -1,20 +1,7 @@
-/*
- * Qué queda por hacer:
- * 	
- * 	Volver a poner GPS
- * 	
- * 	Eliminar acelerómetros y giroscopios de la base de datos
- * 	
- * 	Leer los sensores externos de la BD y ponerlos en los métodos de la 
- * API de Google Endpoints
- * 
- * 	Hacer que se muestren los valores en la pantalla de datos
- * 	
- */
-
 package com.example.app;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,6 +14,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -35,8 +23,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.text.format.Time;
 import android.util.Log;
@@ -49,14 +41,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements SensorEventListener {
+public class MainActivity extends Activity implements LocationListener,SensorEventListener {
 
 	private boolean alarm_flag = false;
 	private int i = 0; // Esta variable se borrará cuando se quite la BD de
 						// pruebas de GAE
 
-	private int latitud = 0;
-	private int longitud = 0;
+	private double latitud = 0;
+	private double longitud = 0;
 	private float aceleracion_x = 0;
 	private float aceleracion_y = 0;
 	private float aceleracion_z = 0;
@@ -64,12 +56,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private float giroscopio_y = 0;
 	private float giroscopio_z = 0;
 	private int pulso = 0;
-	private int tension = 0;
-	private int azucar = 0;
+	private double tension = 0;
+	private double azucar = 0;
 	private int temperatura = 0;
 	private boolean gas = false;
 	private String imei = "";
 	private Long tiempo = (long) 0;
+	
+	private LocationManager locationManager;
+	boolean isGPSEnabled = false;
+	boolean isNetworkEnabled = false;
+	boolean canGetLocation = false;
+	//Location location; 
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +82,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		ImageView imagen = (ImageView) findViewById(R.id.imageView1);
 
+		getLatLong();
+		
+		valoresBD();
+		
 		SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
 		List<Sensor> listaSensores = sensorManager
@@ -129,8 +132,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 
 		};
-
-		// Se llama a la tarea llamadaPeriodica cada 10 segundos desde el segundo 5
+		//Se llama a la tarea llamadaPeriodica cada 10 segundos desde el segundo 5
 
 		timer.scheduleAtFixedRate(llamadaPeriodica, (long) 5000, (long) 10000);
 
@@ -180,10 +182,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 				new EndpointsTask().execute(getApplicationContext());
 
+
+				
 				Toast toast1 = Toast.makeText(getApplicationContext(),
 						"Datos enviados", Toast.LENGTH_SHORT);
 				toast1.show();
+				
 
+				
+				
 			}
 		});
 	}
@@ -265,8 +272,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 				// Cambiar los ceros por los datos guardados en la BD de la app
 
-				datos.setLatitud(0.0);
-				datos.setLongitud(0.0);
+				datos.setLatitud(latitud);
+				datos.setLongitud(longitud);
 
 				datos.setAceleracionX(aceleracion_x);
 				datos.setAceleracionY(aceleracion_y);
@@ -275,12 +282,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 				datos.setGiroscopioY(giroscopio_y);
 				datos.setGiroscopioZ(giroscopio_z);
 
-				datos.setPulso(0);
-				datos.setTension(0.0);
-				datos.setAzucar(0.0);
+				datos.setPulso(pulso);
+				datos.setTension(tension);
+				datos.setAzucar(azucar);
 
-				datos.setTemperatura(0);
-				datos.setGas(false);
+				datos.setTemperatura(temperatura);
+				datos.setGas(gas);
 
 				datos.setImei(imei);
 				datos.setTiempo(tiempo);
@@ -297,4 +304,126 @@ public class MainActivity extends Activity implements SensorEventListener {
 			return (long) 0;
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	public void getLatLong() {
+		try {
+			locationManager = (LocationManager) this
+					.getSystemService(LOCATION_SERVICE);
+
+			isGPSEnabled = locationManager
+					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+			isNetworkEnabled = locationManager
+					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+			if (!isGPSEnabled && !isNetworkEnabled) {
+				Toast.makeText(getBaseContext(),
+						"No está conectada la red ni el gps",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				this.canGetLocation = true;
+				// First get location from Network Provider
+				if (isNetworkEnabled) {
+					locationManager.requestLocationUpdates(
+							LocationManager.NETWORK_PROVIDER, 1, 1, this);
+					if (locationManager != null) {
+						Location location = locationManager
+								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+						if (location != null) {
+							latitud  = location.getLatitude();
+							longitud = location.getLongitude();
+						}
+					}
+				}
+				// if GPS Enabled get lat/long using GPS Services
+				if (isGPSEnabled) {
+					Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+					if (location == null) {
+						locationManager.requestLocationUpdates(
+								LocationManager.GPS_PROVIDER, 1, 1, this);
+						if (locationManager != null) {
+							location = locationManager
+									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+							if (location != null) {
+								latitud  = location.getLatitude();
+								longitud = location.getLongitude();
+							}
+						}
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
+
+	public IBinder onBind(Intent arg0) {
+		return null;
+	}
+	
+	
+	
+	public void valoresBD() {
+
+		// Cargamos los datos anteriores
+		AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"administracion", null, 4);
+		SQLiteDatabase bd = admin.getReadableDatabase();
+
+		ContentValues registro = new ContentValues();
+
+		registro.put("pulso", 0);
+		registro.put("tension", 0);
+		registro.put("azucar", 0);
+		registro.put("humedad", 0);
+		registro.put("gas", 0);
+
+		bd.insert("valores", null, registro);
+		
+		if (bd != null) {
+
+			String[] valores_recuperar = { "pulso", "tension", "azucar", "humedad", "gas" };
+
+			Cursor c = bd.query("valores", valores_recuperar, null, null, null, null, null, null);
+
+			if (c != null) {
+				c.moveToFirst();
+
+				pulso = c.getInt(0);
+				tension = c.getInt(1);
+				azucar = c.getInt(2);
+				temperatura = c.getInt(3);
+				int vGas = c.getInt(4);
+				if(vGas>50){gas=true;}
+
+				c.close();
+			}
+
+		}
+
+	}
+	
 }

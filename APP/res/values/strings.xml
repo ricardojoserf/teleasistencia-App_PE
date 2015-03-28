@@ -40,5 +40,7 @@
     <string name="humedad">Humedad</string>
     <string name="gas">Gas</string>
     <string name="aceleraci_n">Aceleración</string>
+    <string name="temperatura">Temperatura</string>
+    <string name="temp_">Temp(º)</string>
 
 </resources>

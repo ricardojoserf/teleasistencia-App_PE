@@ -18,9 +18,6 @@
 # view res/layout/abc_screen_toolbar.xml #generated:17
 -keep class android.support.v7.internal.widget.ActionBarOverlayLayout { <init>(...); }
 
-# view res/layout/abc_activity_chooser_view.xml #generated:19
--keep class android.support.v7.internal.widget.ActivityChooserView$InnerLayout { <init>(...); }
-
 # view res/layout/abc_screen_content_include.xml #generated:19
 -keep class android.support.v7.internal.widget.ContentFrameLayout { <init>(...); }
 
@@ -50,6 +47,9 @@
 
 # view res/layout/abc_action_menu_layout.xml #generated:17
 -keep class android.support.v7.widget.ActionMenuView { <init>(...); }
+
+# view res/layout/abc_activity_chooser_view.xml #generated:19
+-keep class android.support.v7.widget.LinearLayoutCompat { <init>(...); }
 
 # view res/layout/abc_search_view.xml #generated:78
 -keep class android.support.v7.widget.SearchView$SearchAutoComplete { <init>(...); }

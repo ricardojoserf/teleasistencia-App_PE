@@ -21,8 +21,7 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table valores(pulso integer, tension integer, azucar integer,"
-        		+ " aceleracion integer, giroscopio integer, latitud integer, longitud integer,"
+        db.execSQL("create table valores(pulso integer, tension integer, azucar integer,"	
         		+ " humedad integer, gas integer )");
        
     }
@@ -32,7 +31,7 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
    
         db.execSQL("drop table if exists valores");
         db.execSQL("create table valores(pulso integer, tension integer, azucar integer,"
-        		+ " aceleracion integer, giroscopio integer, latitud integer, longitud integer, humedad integer, gas integer )");
+               		+ " humedad integer, gas integer )");
          
     }    
 }

@@ -98,7 +98,7 @@
         android:layout_alignStart="@+id/textView3"
         android:layout_below="@+id/textView10"
         android:layout_marginTop="15dp"
-        android:text="@string/humedad"
+        android:text="@string/temp_"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 		
 		<TextView
@@ -195,7 +195,7 @@
         android:textStyle="bold"
         android:background="#BCE8FF" 
         android:ems="6"
-        android:inputType="number" >
+       >
         <requestFocus />
     </EditText>
     
@@ -216,7 +216,7 @@
         android:textStyle="bold"
         android:background="#BCE8FF" 
         android:ems="6"
-        android:inputType="number" >
+ >
         <requestFocus />
     </EditText>
     

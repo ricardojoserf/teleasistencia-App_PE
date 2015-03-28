@@ -39,7 +39,7 @@
         android:layout_alignStart="@+id/textView4"
         android:layout_below="@+id/textView4"
         android:layout_marginTop="30dp"
-        android:text="@string/humedad"
+        android:text="@string/temp_"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
     <TextView

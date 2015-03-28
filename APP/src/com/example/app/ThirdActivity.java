@@ -1,8 +1,10 @@
 package com.example.app;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,16 +14,25 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class ThirdActivity extends Activity implements LocationListener,
 		SensorEventListener {
 
+	private LocationManager locationManager;
+	boolean isGPSEnabled = false;
+	boolean isNetworkEnabled = false;
+	boolean canGetLocation = false;
+	//Location location; 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -30,6 +41,7 @@ public class ThirdActivity extends Activity implements LocationListener,
 
 		ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton1);
 
+	
 		SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
 		List<Sensor> listaSensores = sensorManager
@@ -58,39 +70,10 @@ public class ThirdActivity extends Activity implements LocationListener,
 		}
 
 		cargarBaseDeDatos();
+		
+		getLocation();
+		
 
-		// Estaría guay que en la pantalla de datos apareciese un mapa en vez de
-		// números, pero si es complicado... Nada
-
-		// GPS ...
-		/*
-		 * 
-		 * 
-		 * 
-		 * LocationManager mlocManager = (LocationManager)
-		 * getSystemService(Context.LOCATION_SERVICE); boolean gps_enabled =
-		 * mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER); boolean
-		 * network_enabled =
-		 * mlocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-		 * 
-		 * 
-		 * 
-		 * 
-		 * if (network_enabled && gps_enabled) {
-		 * 
-		 * Toast.makeText(getBaseContext(),"Está conectada la red",
-		 * Toast.LENGTH_SHORT).show();
-		 * 
-		 * LocationListener mlocListener = new ThirdActivity();
-		 * mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-		 * 0, mlocListener); Criteria hdCrit = new Criteria();
-		 * hdCrit.setAccuracy(Criteria.ACCURACY_COARSE); String mlocProvider =
-		 * mlocManager.getBestProvider(hdCrit, true); Location currentLocation =
-		 * mlocManager.getLastKnownLocation(mlocProvider);
-		 * //text7.setText(""+currentLocation.getLatitude());
-		 * //text8.setText(""+currentLocation.getLongitude()); }
-		 */
-		// ... GPS
 
 		imageButton.setOnClickListener(new View.OnClickListener() {
 
@@ -108,18 +91,24 @@ public class ThirdActivity extends Activity implements LocationListener,
 	public void cargarBaseDeDatos() {
 
 		// Cargamos los datos anteriores
-		AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,
-				"administracion", null, 2);
+		AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"administracion", null, 4);
 		SQLiteDatabase bd = admin.getReadableDatabase();
 
+		ContentValues registro = new ContentValues();
+
+		registro.put("pulso", 0);
+		registro.put("tension", 0);
+		registro.put("azucar", 0);
+		registro.put("humedad", 0);
+		registro.put("gas", 0);
+
+		bd.insert("valores", null, registro);
+		
 		if (bd != null) {
 
-			String[] valores_recuperar = { "pulso", "tension", "azucar",
-					"aceleracion", "giroscopio", "latitud", "longitud",
-					"humedad", "gas" };
+			String[] valores_recuperar = { "pulso", "tension", "azucar", "humedad", "gas" };
 
-			Cursor c = bd.query("valores", valores_recuperar, null, null, null,
-					null, null, null);
+			Cursor c = bd.query("valores", valores_recuperar, null, null, null, null, null, null);
 
 			if (c != null) {
 				c.moveToFirst();
@@ -133,8 +122,8 @@ public class ThirdActivity extends Activity implements LocationListener,
 				text2.setText(c.getString(0));
 				text3.setText(c.getString(1));
 				text4.setText(c.getString(2));
-				text9.setText(c.getString(7));
-				text10.setText(c.getString(8));
+				text9.setText(c.getString(3));
+				text10.setText(c.getString(4));
 
 				c.close();
 			}
@@ -162,6 +151,69 @@ public class ThirdActivity extends Activity implements LocationListener,
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void getLocation() {
+		try {
+			locationManager = (LocationManager) this
+					.getSystemService(LOCATION_SERVICE);
+
+			isGPSEnabled = locationManager
+					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+			isNetworkEnabled = locationManager
+					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+			if (!isGPSEnabled && !isNetworkEnabled) {
+				Toast.makeText(getBaseContext(),
+						"No está conectada la red ni el gps",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				this.canGetLocation = true;
+				// First get location from Network Provider
+				if (isNetworkEnabled) {
+					locationManager.requestLocationUpdates(
+							LocationManager.NETWORK_PROVIDER, 1, 1, this);
+					if (locationManager != null) {
+						Location location = locationManager
+								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+						if (location != null) {
+							EditText text7 = (EditText) findViewById(R.id.editText7);
+							EditText text8 = (EditText) findViewById(R.id.editText8);
+							text7.setText(String.valueOf(location.getLatitude()));
+							text8.setText(String.valueOf(location.getLongitude()));
+						}
+					}
+				}
+				// if GPS Enabled get lat/long using GPS Services
+				if (isGPSEnabled) {
+					Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+					if (location == null) {
+						locationManager.requestLocationUpdates(
+								LocationManager.GPS_PROVIDER, 1, 1, this);
+						if (locationManager != null) {
+							location = locationManager
+									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+							if (location != null) {
+								EditText text7 = (EditText) findViewById(R.id.editText7);
+								EditText text8 = (EditText) findViewById(R.id.editText8);
+								text7.setText(String.valueOf(location.getLatitude()));
+								text8.setText(String.valueOf(location.getLongitude()));
+							}
+						}
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+	}
+
 	@Override
 	public void onProviderDisabled(String provider) {
 	}
@@ -170,13 +222,14 @@ public class ThirdActivity extends Activity implements LocationListener,
 	public void onProviderEnabled(String provider) {
 	}
 
-	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
-	@Override
-	public void onLocationChanged(Location loc) {
+	public IBinder onBind(Intent arg0) {
+		return null;
 	}
+
+	
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
@@ -188,31 +241,28 @@ public class ThirdActivity extends Activity implements LocationListener,
 	public void onSensorChanged(SensorEvent evento) {
 		synchronized (this) {
 
-			// Lo suyo es que se muestre el valor en la casilla correspondiente
-			// (que aún no se ha creado).
-
 			switch (evento.sensor.getType()) {
 
 			case Sensor.TYPE_GYROSCOPE:
 
-				/*
-				 * aceleracion_x = evento.values[0]; aceleracion_y =
-				 * evento.values[1]; aceleracion_z = evento.values[2];
-				 */
+				EditText text6 = (EditText) findViewById(R.id.editText6);
+				String gX = new DecimalFormat("#.##").format(evento.values[0]);
+				String gY = new DecimalFormat("#.##").format(evento.values[1]);
+				String gZ = new DecimalFormat("#.#").format(evento.values[2]);
+				text6.setText(gX+"/"+gY+"/"+gZ);
 
 				break;
 
 			case Sensor.TYPE_ACCELEROMETER:
 
-				/*
-				 * giroscopio_x = evento.values[0]; giroscopio_y =
-				 * evento.values[1]; giroscopio_z = evento.values[2];
-				 */
+				EditText text5 = (EditText) findViewById(R.id.editText5);
+				String aX = new DecimalFormat("#.##").format(evento.values[0]);
+				String aY = new DecimalFormat("#.##").format(evento.values[1]);
+				String aZ = new DecimalFormat("#.#").format(evento.values[2]);
+				text5.setText(aX+"/"+aY+"/"+aZ);
 
 				break;
-
 			}
-
 		}
 
 	}
