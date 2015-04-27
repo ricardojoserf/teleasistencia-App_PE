@@ -2848,7 +2848,7 @@ com.example.app.CloudEndpointUtils:
     132:140:public static void showError(android.app.Activity,java.lang.String)
 com.example.app.CloudEndpointUtils$2
 com.example.app.MainActivity:
-    400:400:public android.os.IBinder onBind(android.content.Intent)
+    519:519:public android.os.IBinder onBind(android.content.Intent)
 com.example.app.Manifest
 com.example.app.Manifest$permission
 com.example.app.R
@@ -2930,15 +2930,15 @@ com.example.app.datosendpoint.DatosendpointRequestInitializer
 com.example.app.datosendpoint.DatosendpointScopes
 com.example.app.datosendpoint.model.CollectionResponseDatos
 com.example.app.datosendpoint.model.Datos:
-    140:140:public java.lang.Float getAceleracionX()
-    155:155:public java.lang.Float getAceleracionY()
-    170:170:public java.lang.Float getAceleracionZ()
+    140:140:public java.lang.Double getAceleracionX()
+    155:155:public java.lang.Double getAceleracionY()
+    170:170:public java.lang.Double getAceleracionZ()
     185:185:public java.lang.Boolean getAlarma()
     200:200:public java.lang.Double getAzucar()
-    215:215:public java.lang.Boolean getGas()
-    230:230:public java.lang.Float getGiroscopioX()
-    245:245:public java.lang.Float getGiroscopioY()
-    260:260:public java.lang.Float getGiroscopioZ()
+    215:215:public java.lang.Double getGas()
+    230:230:public java.lang.Double getGiroscopioX()
+    245:245:public java.lang.Double getGiroscopioY()
+    260:260:public java.lang.Double getGiroscopioZ()
     275:275:public java.lang.Long getId()
     290:290:public java.lang.String getImei()
     305:305:public java.lang.Double getLatitud()

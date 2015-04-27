@@ -1,12 +1,12 @@
 {
   "extends" : "thirdParty.api",
   "abstract" : false,
-  "root" : "https://pruebacdps.appspot.com/_ah/api",
+  "root" : "https://isstg3pe.appspot.com/_ah/api",
   "name" : "datosendpoint",
   "version" : "v1",
   "defaultVersion" : false,
   "adapter" : {
-    "bns" : "https://pruebacdps.appspot.com/_ah/spi",
+    "bns" : "https://isstg3pe.appspot.com/_ah/spi",
     "deadline" : 65.0,
     "type" : "lily"
   },
@@ -48,6 +48,22 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "datosendpoint.insertDatos" : {
+      "path" : "datos",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.example.app.DatosEndpoint.insertDatos",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "datosendpoint.listDatos" : {
       "path" : "datos",
       "httpMethod" : "GET",
@@ -73,14 +89,14 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "datosendpoint.insertDatos" : {
+    "datosendpoint.updateDatos" : {
       "path" : "datos",
-      "httpMethod" : "POST",
+      "httpMethod" : "PUT",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.example.app.DatosEndpoint.insertDatos",
+      "rosyMethod" : "com.example.app.DatosEndpoint.updateDatos",
       "request" : {
         "body" : "autoTemplate(backendRequest)",
         "bodyName" : "resource"
@@ -109,22 +125,6 @@
       "response" : {
         "body" : "empty"
       }
-    },
-    "datosendpoint.updateDatos" : {
-      "path" : "datos",
-      "httpMethod" : "PUT",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.example.app.DatosEndpoint.updateDatos",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
     }
   },
   "descriptor" : {
@@ -144,28 +144,25 @@
             "type" : "number"
           },
           "aceleracion_x" : {
-            "type" : "number",
-            "format" : "float"
+            "type" : "number"
           },
           "aceleracion_y" : {
-            "type" : "number",
-            "format" : "float"
+            "type" : "number"
           },
           "aceleracion_z" : {
-            "type" : "number",
-            "format" : "float"
+            "type" : "number"
           },
           "giroscopio_x" : {
-            "type" : "number",
-            "format" : "float"
+            "type" : "number"
           },
           "giroscopio_y" : {
-            "type" : "number",
-            "format" : "float"
+            "type" : "number"
           },
           "giroscopio_z" : {
-            "type" : "number",
-            "format" : "float"
+            "type" : "number"
+          },
+          "imei" : {
+            "type" : "string"
           },
           "pulso" : {
             "type" : "integer"
@@ -180,10 +177,7 @@
             "type" : "integer"
           },
           "gas" : {
-            "type" : "boolean"
-          },
-          "imei" : {
-            "type" : "string"
+            "type" : "number"
           },
           "tiempo" : {
             "type" : "string",
@@ -216,11 +210,6 @@
           "$ref" : "Datos"
         }
       },
-      "com.example.app.DatosEndpoint.listDatos" : {
-        "response" : {
-          "$ref" : "CollectionResponse_Datos"
-        }
-      },
       "com.example.app.DatosEndpoint.insertDatos" : {
         "request" : {
           "$ref" : "Datos"
@@ -229,7 +218,10 @@
           "$ref" : "Datos"
         }
       },
-      "com.example.app.DatosEndpoint.removeDatos" : {
+      "com.example.app.DatosEndpoint.listDatos" : {
+        "response" : {
+          "$ref" : "CollectionResponse_Datos"
+        }
       },
       "com.example.app.DatosEndpoint.updateDatos" : {
         "request" : {
@@ -238,6 +230,8 @@
         "response" : {
           "$ref" : "Datos"
         }
+      },
+      "com.example.app.DatosEndpoint.removeDatos" : {
       }
     }
   }

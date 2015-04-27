@@ -37,10 +37,8 @@
     <string name="gps_latitud">GPS-Latitud</string>
     <string name="gps_longitud">GPS-Longitud</string>
     <string name="datoss">DATOSS</string>
-    <string name="humedad">Humedad</string>
+    <string name="temperatura">Temper.</string>
     <string name="gas">Gas</string>
     <string name="aceleraci_n">Aceleración</string>
-    <string name="temperatura">Temperatura</string>
-    <string name="temp_">Temp(º)</string>
 
 </resources>

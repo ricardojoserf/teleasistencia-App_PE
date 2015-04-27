@@ -509,13 +509,11 @@ int string gps 0x7f0a001f
 int string gps_latitud 0x7f0a0031
 int string gps_longitud 0x7f0a0032
 int string hello_world 0x7f0a0011
-int string humedad 0x7f0a0034
 int string ll_manos 0x7f0a0025
 int string pantalla_de_ayuda 0x7f0a0024
 int string posici_n 0x7f0a0019
 int string pulso 0x7f0a001c
-int string temp_ 0x7f0a0038
-int string temperatura 0x7f0a0037
+int string temperatura 0x7f0a0034
 int string tensi_n 0x7f0a001a
 int string test 0x7f0a0016
 int string uso_de_la_app_ 0x7f0a002f

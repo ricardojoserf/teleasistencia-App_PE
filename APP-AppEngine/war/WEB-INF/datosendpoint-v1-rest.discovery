@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/fFafF1Y0uWKfvn-YeTw5leDH1ew\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/28caxYnrslKN6RtE_TSwZNKsyCc\"",
  "discoveryVersion": "v1",
  "id": "datosendpoint:v1",
  "name": "datosendpoint",
@@ -14,9 +14,9 @@
   "x32": "http://www.google.com/images/icons/product/search-32.gif"
  },
  "protocol": "rest",
- "baseUrl": "https://pruebacdps.appspot.com/_ah/api/datosendpoint/v1/",
+ "baseUrl": "https://isstg3pe.appspot.com/_ah/api/datosendpoint/v1/",
  "basePath": "/_ah/api/datosendpoint/v1/",
- "rootUrl": "https://pruebacdps.appspot.com/_ah/api/",
+ "rootUrl": "https://isstg3pe.appspot.com/_ah/api/",
  "servicePath": "datosendpoint/v1/",
  "batchPath": "batch",
  "parameters": {
@@ -95,15 +95,15 @@
    "properties": {
     "aceleracion_x": {
      "type": "number",
-     "format": "float"
+     "format": "double"
     },
     "aceleracion_y": {
      "type": "number",
-     "format": "float"
+     "format": "double"
     },
     "aceleracion_z": {
      "type": "number",
-     "format": "float"
+     "format": "double"
     },
     "alarma": {
      "type": "boolean"
@@ -113,19 +113,20 @@
      "format": "double"
     },
     "gas": {
-     "type": "boolean"
+     "type": "number",
+     "format": "double"
     },
     "giroscopio_x": {
      "type": "number",
-     "format": "float"
+     "format": "double"
     },
     "giroscopio_y": {
      "type": "number",
-     "format": "float"
+     "format": "double"
     },
     "giroscopio_z": {
      "type": "number",
-     "format": "float"
+     "format": "double"
     },
     "id": {
      "type": "string",

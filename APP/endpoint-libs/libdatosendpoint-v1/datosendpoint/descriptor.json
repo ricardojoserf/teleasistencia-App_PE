@@ -1,13 +1,13 @@
 {
   "files": [
     {
-      "downloadUrl": "/downloads/datosendpoint/v1/20150328011619/java/1.18.0-rc/example.com-datosendpoint-v1-20150328011619-java-1.18.0-rc-sources.jar", 
-      "path": "example.com-datosendpoint-v1-20150328011619-java-1.18.0-rc-sources.jar", 
+      "downloadUrl": "/downloads/datosendpoint/v1/20150421210248/java/1.18.0-rc/example.com-datosendpoint-v1-20150421210248-java-1.18.0-rc-sources.jar", 
+      "path": "example.com-datosendpoint-v1-20150421210248-java-1.18.0-rc-sources.jar", 
       "type": "source", 
-      "timestamp": "2015-03-28 01:16"
+      "timestamp": "2015-04-21 21:02"
     }, 
     {
-      "path": "example.com-datosendpoint-v1-20150328011619-java-1.18.0-rc.jar.properties", 
+      "path": "example.com-datosendpoint-v1-20150421210248-java-1.18.0-rc.jar.properties", 
       "type": "android.properties"
     }
   ], 
@@ -675,5 +675,5 @@
   "packagePath": "app", 
   "language_version": "1.18.0-rc", 
   "id": "datosendpoint:v1", 
-  "revision": 20150328011619
+  "revision": 20150421210248
 }

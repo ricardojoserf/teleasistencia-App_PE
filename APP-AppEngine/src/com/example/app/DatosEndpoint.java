@@ -1,14 +1,12 @@
 package com.example.app;
 
 import com.example.app.PMF;
-
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.datanucleus.query.JDOCursorHelper;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,11 +21,11 @@ import javax.jdo.Query;
 public class DatosEndpoint {
 
 	/**
-	 * This method lists all the entities inserted in datastore.
-	 * It uses HTTP GET method and paging support.
+	 * This method lists all the entities inserted in datastore. It uses HTTP
+	 * GET method and paging support.
 	 *
 	 * @return A CollectionResponse class containing the list of all entities
-	 * persisted and a cursor to the next page.
+	 *         persisted and a cursor to the next page.
 	 */
 	@SuppressWarnings({ "unchecked", "unused" })
 	@ApiMethod(name = "listDatos")
@@ -57,9 +55,6 @@ public class DatosEndpoint {
 			cursor = JDOCursorHelper.getCursor(execute);
 			if (cursor != null)
 				cursorString = cursor.toWebSafeString();
-
-			// Tight loop for fetching all entities from datastore and accomodate
-			// for lazy fetch.
 			for (Datos obj : execute)
 				;
 		} finally {
@@ -71,9 +66,11 @@ public class DatosEndpoint {
 	}
 
 	/**
-	 * This method gets the entity having primary key id. It uses HTTP GET method.
+	 * This method gets the entity having primary key id. It uses HTTP GET
+	 * method.
 	 *
-	 * @param id the primary key of the java bean.
+	 * @param id
+	 *            the primary key of the java bean.
 	 * @return The entity with primary key id.
 	 */
 	@ApiMethod(name = "getDatos")
@@ -89,33 +86,60 @@ public class DatosEndpoint {
 	}
 
 	/**
-	 * This inserts a new entity into App Engine datastore. If the entity already
-	 * exists in the datastore, an exception is thrown.
-	 * It uses HTTP POST method.
+	 * This inserts a new entity into App Engine datastore. If the entity
+	 * already exists in the datastore, an exception is thrown. It uses HTTP
+	 * POST method.
 	 *
-	 * @param datos the entity to be inserted.
+	 * @param datos
+	 *            the entity to be inserted.
 	 * @return The inserted entity.
 	 */
 	@ApiMethod(name = "insertDatos")
 	public Datos insertDatos(Datos datos) {
-		PersistenceManager mgr = getPersistenceManager();
-		try {
-			if (containsDatos(datos)) {
-				throw new EntityExistsException("Object already exists");
+
+		// Recupera el id puesto en la app parseándolo del id recibido (id =
+		// id_App+imei)
+
+		final long id_App = Integer.parseInt(String.valueOf(datos.getId())
+				.split("" + datos.getImei())[0]);
+		EventProcessor PE = new EventProcessor();
+		PE.ProcesadorEventos(datos, id_App);
+		// Para evitar errores, no se registrarán en nuestra base de datos los
+		// eventos generados al pulsar el botón (id == 0).
+
+		if (datos.getId() != 0) {
+
+			PersistenceManager mgr = getPersistenceManager();
+			try {
+				if (containsDatos(datos)) {
+					throw new EntityExistsException("Object already exists");
+				}
+				mgr.makePersistent(datos);
+			} finally {
+				mgr.close();
 			}
-			mgr.makePersistent(datos);
-		} finally {
-			mgr.close();
+
+			// Guarda una ventana temporal de 60 segundos sin contar la medida
+			// actual (es decir, borra la 7ª medida más antigua, contando la
+			// nueva)
+
+			if (id_App > 6) {
+
+				final String code_delete = "" + (id_App - 6) + datos.getImei();
+				removeDatos(Long.parseLong(code_delete));
+			}
 		}
+
 		return datos;
 	}
 
 	/**
-	 * This method is used for updating an existing entity. If the entity does not
-	 * exist in the datastore, an exception is thrown.
-	 * It uses HTTP PUT method.
+	 * This method is used for updating an existing entity. If the entity does
+	 * not exist in the datastore, an exception is thrown. It uses HTTP PUT
+	 * method.
 	 *
-	 * @param datos the entity to be updated.
+	 * @param datos
+	 *            the entity to be updated.
 	 * @return The updated entity.
 	 */
 	@ApiMethod(name = "updateDatos")
@@ -133,10 +157,11 @@ public class DatosEndpoint {
 	}
 
 	/**
-	 * This method removes the entity with primary key id.
-	 * It uses HTTP DELETE method.
+	 * This method removes the entity with primary key id. It uses HTTP DELETE
+	 * method.
 	 *
-	 * @param id the primary key of the entity to be deleted.
+	 * @param id
+	 *            the primary key of the entity to be deleted.
 	 */
 	@ApiMethod(name = "removeDatos")
 	public void removeDatos(@Named("id") Long id) {
@@ -144,6 +169,9 @@ public class DatosEndpoint {
 		try {
 			Datos datos = mgr.getObjectById(Datos.class, id);
 			mgr.deletePersistent(datos);
+		} catch (Exception e) {
+			System.out.println("No existe el id= " + id
+					+ " en la base de datos.");
 		} finally {
 			mgr.close();
 		}

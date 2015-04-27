@@ -91,7 +91,7 @@ public class ThirdActivity extends Activity implements LocationListener,
 	public void cargarBaseDeDatos() {
 
 		// Cargamos los datos anteriores
-		AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"administracion", null, 4);
+		ValoresSQLiteOpenHelper admin = new ValoresSQLiteOpenHelper(this,"valores", null, 1);
 		SQLiteDatabase bd = admin.getReadableDatabase();
 
 		ContentValues registro = new ContentValues();

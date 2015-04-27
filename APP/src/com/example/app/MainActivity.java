@@ -1,7 +1,6 @@
 package com.example.app;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,38 +36,61 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements LocationListener,SensorEventListener {
+public class MainActivity extends Activity implements LocationListener,
+		SensorEventListener {
 
 	private boolean alarm_flag = false;
-	private int i = 0; // Esta variable se borrará cuando se quite la BD de
-						// pruebas de GAE
 
+	private int id = 0;
 	private double latitud = 0;
 	private double longitud = 0;
-	private float aceleracion_x = 0;
-	private float aceleracion_y = 0;
-	private float aceleracion_z = 0;
-	private float giroscopio_x = 0;
-	private float giroscopio_y = 0;
-	private float giroscopio_z = 0;
+	private float aceleracion_x0 = 0;
+	private float delta_aceleracion_x = 0;
+	private float aceleracion_y0 = 0;
+	private float delta_aceleracion_y = 0;
+	private float aceleracion_z0 = 0;
+	private float delta_aceleracion_z = 0;
+	private float giroscopio_x0 = 0;
+	private float delta_giroscopio_x = 0;
+	private float giroscopio_y0 = 0;
+	private float delta_giroscopio_y = 0;
+	private float giroscopio_z0 = 0;
+	private float delta_giroscopio_z = 0;
 	private int pulso = 0;
 	private double tension = 0;
 	private double azucar = 0;
 	private int temperatura = 0;
-	private boolean gas = false;
+	private double gas = 0;
 	private String imei = "";
 	private Long tiempo = (long) 0;
-	
+
 	private LocationManager locationManager;
 	boolean isGPSEnabled = false;
 	boolean isNetworkEnabled = false;
 	boolean canGetLocation = false;
-	//Location location; 
-	
+	// Location location;
+
+	Timer timer = new Timer();
+	TimerTask llamadaPeriodica = new TimerTask() {
+
+		@Override
+		public void run() {
+
+			getLatLong();
+
+			Time now = new Time();
+			now.setToNow();
+			tiempo = now.toMillis(false);
+			id++;
+
+			new EndpointsTask().execute(getApplicationContext());
+
+		}
+
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,16 +98,14 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 
+		Log.d("MILOG", "create");
+
 		Button boton = (Button) findViewById(R.id.button1);
 		Button boton2 = (Button) findViewById(R.id.button2);
 		Button boton3 = (Button) findViewById(R.id.button3);
 
 		ImageView imagen = (ImageView) findViewById(R.id.imageView1);
 
-		getLatLong();
-		
-		valoresBD();
-		
 		SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
 		List<Sensor> listaSensores = sensorManager
@@ -114,27 +134,6 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 		TelephonyManager mTelephonyManager;
 		mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		imei = mTelephonyManager.getDeviceId();
-
-		Timer timer = new Timer();
-		TimerTask llamadaPeriodica = new TimerTask() {
-
-			@Override
-			public void run() {
-
-				Log.d("LOG PERIÓDICO", "Enviando datos periódicos");
-				
-				Time now = new Time();
-				now.setToNow();
-				tiempo = now.toMillis(false);
-
-				new EndpointsTask().execute(getApplicationContext());
-
-			}
-
-		};
-		//Se llama a la tarea llamadaPeriodica cada 10 segundos desde el segundo 5
-
-		timer.scheduleAtFixedRate(llamadaPeriodica, (long) 5000, (long) 10000);
 
 		boton.setOnClickListener(new View.OnClickListener() {
 
@@ -182,17 +181,86 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 
 				new EndpointsTask().execute(getApplicationContext());
 
-
-				
 				Toast toast1 = Toast.makeText(getApplicationContext(),
 						"Datos enviados", Toast.LENGTH_SHORT);
 				toast1.show();
-				
 
-				
-				
 			}
 		});
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d("MILOG", "start");
+		getLatLong();
+		valoresBD();
+
+		recuperarIDdeBD();
+
+		// Se llama a la tarea llamadaPeriodica cada 10 segundos desde el
+		// segundo 5
+		timer.scheduleAtFixedRate(llamadaPeriodica, (long) 5000, (long) 10000);
+
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d("MILOG", "pause");
+
+		guardarIDenBD();
+
+		llamadaPeriodica.cancel();
+		timer.cancel();
+
+	};
+
+	public void guardarIDenBD() {
+
+		IdSQLiteOpenHelper admin = new IdSQLiteOpenHelper(this, "valorID",
+				null, 1);
+		SQLiteDatabase bd = admin.getWritableDatabase();
+		ContentValues registro = new ContentValues();
+
+		registro.put("id", id);
+
+		bd.delete("valorID", null, null);
+		bd.insert("valorID", null, registro);
+
+		bd.close();
+	}
+
+	public void recuperarIDdeBD() {
+
+		IdSQLiteOpenHelper admin = new IdSQLiteOpenHelper(this, "valorID",
+				null, 1);
+		SQLiteDatabase bd = admin.getReadableDatabase();
+
+		ContentValues registro = new ContentValues();
+
+		registro.put("id", 0);
+
+		bd.insert("valorID", null, registro);
+
+		if (bd != null) {
+
+			String[] valores_recuperar = { "id" };
+
+			Cursor c = bd.query("ValorID", valores_recuperar, null, null, null,
+					null, null, null);
+
+			if (c != null) {
+
+				c.moveToFirst();
+
+				id = c.getInt(0);
+
+				c.close();
+			}
+
+		}
+		Log.w("MILOG", "id = " + id);
 	}
 
 	@Override
@@ -216,7 +284,6 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -226,19 +293,57 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 
 			switch (evento.sensor.getType()) {
 
-			case Sensor.TYPE_GYROSCOPE:
-
-				aceleracion_x = evento.values[0];
-				aceleracion_y = evento.values[1];
-				aceleracion_z = evento.values[2];
-
-				break;
-
 			case Sensor.TYPE_ACCELEROMETER:
 
-				giroscopio_x = evento.values[0];
-				giroscopio_y = evento.values[1];
-				giroscopio_z = evento.values[2];
+				if (aceleracion_x0 == 0 && aceleracion_y0 == 0
+						&& aceleracion_z0 == 0) {
+					aceleracion_x0 = evento.values[0];
+					aceleracion_y0 = evento.values[1];
+					aceleracion_z0 = evento.values[2];
+				} else {
+					if (delta_aceleracion_x < Math.abs(aceleracion_x0
+							- evento.values[0])) {
+						delta_aceleracion_x = Math.abs(aceleracion_x0
+								- evento.values[0]);
+					}
+					if (delta_aceleracion_y < Math.abs(aceleracion_y0
+							- evento.values[1])) {
+						delta_aceleracion_y = Math.abs(aceleracion_y0
+								- evento.values[1]);
+					}
+					if (delta_aceleracion_z < Math.abs(aceleracion_z0
+							- evento.values[2])) {
+						delta_aceleracion_z = Math.abs(aceleracion_z0
+								- evento.values[2]);
+					}
+				}
+				break;
+
+			case Sensor.TYPE_GYROSCOPE:
+
+				if (giroscopio_x0 == 0 && giroscopio_y0 == 0
+						&& giroscopio_z0 == 0) {
+					giroscopio_x0 = evento.values[0];
+					giroscopio_y0 = evento.values[1];
+					giroscopio_z0 = evento.values[2];
+
+				} else {
+					if (delta_giroscopio_x < Math.abs(giroscopio_x0
+							- evento.values[0])) {
+						delta_giroscopio_x = Math.abs(giroscopio_x0
+								- evento.values[0]);
+					}
+					if (delta_giroscopio_y < Math.abs(giroscopio_y0
+							- evento.values[1])) {
+						delta_giroscopio_y = Math.abs(giroscopio_y0
+								- evento.values[1]);
+					}
+					if (delta_giroscopio_z < Math.abs(giroscopio_z0
+							- evento.values[2])) {
+						delta_giroscopio_z = Math.abs(giroscopio_z0
+								- evento.values[2]);
+					}
+				}
 
 				break;
 			}
@@ -268,19 +373,15 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 
 				Datos datos = new Datos();
 
-				datos.setId((long) ++i);
-
-				// Cambiar los ceros por los datos guardados en la BD de la app
-
 				datos.setLatitud(latitud);
 				datos.setLongitud(longitud);
 
-				datos.setAceleracionX(aceleracion_x);
-				datos.setAceleracionY(aceleracion_y);
-				datos.setAceleracionZ(aceleracion_z);
-				datos.setGiroscopioX(giroscopio_x);
-				datos.setGiroscopioY(giroscopio_y);
-				datos.setGiroscopioZ(giroscopio_z);
+				datos.setAceleracionX((double) delta_aceleracion_x);
+				datos.setAceleracionY((double) delta_aceleracion_y);
+				datos.setAceleracionZ((double) delta_aceleracion_z);
+				datos.setGiroscopioX((double) delta_giroscopio_x);
+				datos.setGiroscopioY((double) delta_giroscopio_y);
+				datos.setGiroscopioZ((double) delta_giroscopio_z);
 
 				datos.setPulso(pulso);
 				datos.setTension(tension);
@@ -292,25 +393,58 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 				datos.setImei(imei);
 				datos.setTiempo(tiempo);
 
+				if (!alarm_flag) {
+					Long code = Long.parseLong("" + String.valueOf(id) + imei);
+					datos.setId(code);
+				} else {
+					datos.setId((long) 0);
+				}
+
 				datos.setAlarma(alarm_flag);
 
 				alarm_flag = false;
+
+				Log.w("MILOG", datos.toString());
+
+				/*
+				 * Log.w("aceleracion_x0", ""+aceleracion_x0);
+				 * Log.w("delta_aceleracion_x", ""+delta_aceleracion_x);
+				 * Log.w("aceleracion_y0", ""+aceleracion_z0);
+				 * Log.w("delta_aceleracion_y", ""+delta_aceleracion_y);
+				 * Log.w("aceleracion_z0", ""+aceleracion_z0);
+				 * Log.w("delta_aceleracion_z", ""+delta_aceleracion_z);
+				 * 
+				 * Log.w("giroscopio_x0", ""+giroscopio_x0);
+				 * Log.w("delta_giroscopio_x", ""+delta_giroscopio_x);
+				 * Log.w("giroscopio_y0", ""+giroscopio_z0);
+				 * Log.w("delta_giroscopio_y", ""+delta_giroscopio_y);
+				 * Log.w("giroscopio_z0", ""+giroscopio_z0);
+				 * Log.w("delta_giroscopio_z", ""+delta_giroscopio_z);
+				 */
+
+				aceleracion_x0 = 0;
+				delta_aceleracion_x = 0;
+				aceleracion_y0 = 0;
+				delta_aceleracion_y = 0;
+				aceleracion_z0 = 0;
+				delta_aceleracion_z = 0;
+				giroscopio_x0 = 0;
+				delta_giroscopio_x = 0;
+				giroscopio_y0 = 0;
+				delta_giroscopio_y = 0;
+				giroscopio_z0 = 0;
+				delta_giroscopio_z = 0;
 
 				endpoint.insertDatos(datos).execute();
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
 			return (long) 0;
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
+
 	public void getLatLong() {
 		try {
 			locationManager = (LocationManager) this
@@ -336,14 +470,15 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 						Location location = locationManager
 								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 						if (location != null) {
-							latitud  = location.getLatitude();
+							latitud = location.getLatitude();
 							longitud = location.getLongitude();
 						}
 					}
 				}
 				// if GPS Enabled get lat/long using GPS Services
 				if (isGPSEnabled) {
-					Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+					Location location = locationManager
+							.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 					if (location == null) {
 						locationManager.requestLocationUpdates(
 								LocationManager.GPS_PROVIDER, 1, 1, this);
@@ -351,7 +486,7 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 							location = locationManager
 									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 							if (location != null) {
-								latitud  = location.getLatitude();
+								latitud = location.getLatitude();
 								longitud = location.getLongitude();
 							}
 						}
@@ -362,7 +497,6 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 
 	}
 
@@ -384,13 +518,12 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 	public IBinder onBind(Intent arg0) {
 		return null;
 	}
-	
-	
-	
+
 	public void valoresBD() {
 
 		// Cargamos los datos anteriores
-		AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"administracion", null, 4);
+		ValoresSQLiteOpenHelper admin = new ValoresSQLiteOpenHelper(this,
+				"valores", null, 1);
 		SQLiteDatabase bd = admin.getReadableDatabase();
 
 		ContentValues registro = new ContentValues();
@@ -402,12 +535,14 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 		registro.put("gas", 0);
 
 		bd.insert("valores", null, registro);
-		
+
 		if (bd != null) {
 
-			String[] valores_recuperar = { "pulso", "tension", "azucar", "humedad", "gas" };
+			String[] valores_recuperar = { "pulso", "tension", "azucar",
+					"humedad", "gas" };
 
-			Cursor c = bd.query("valores", valores_recuperar, null, null, null, null, null, null);
+			Cursor c = bd.query("valores", valores_recuperar, null, null, null,
+					null, null, null);
 
 			if (c != null) {
 				c.moveToFirst();
@@ -416,8 +551,7 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 				tension = c.getInt(1);
 				azucar = c.getInt(2);
 				temperatura = c.getInt(3);
-				int vGas = c.getInt(4);
-				if(vGas>50){gas=true;}
+				gas = c.getInt(4);
 
 				c.close();
 			}
@@ -425,5 +559,5 @@ public class MainActivity extends Activity implements LocationListener,SensorEve
 		}
 
 	}
-	
+
 }

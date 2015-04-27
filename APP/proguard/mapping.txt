@@ -6004,77 +6004,102 @@ android.support.v7.widget.Toolbar$SavedState$1 -> android.support.v7.widget.ap:
     android.support.v7.widget.Toolbar$SavedState[] newArray(int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.example.app.AdminSQLiteOpenHelper -> com.example.app.a:
-    void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
-    void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
-com.example.app.CloudEndpointUtils -> com.example.app.b:
+com.example.app.CloudEndpointUtils -> com.example.app.a:
     com.google.api.client.googleapis.services.AbstractGoogleClient$Builder updateBuilder(com.google.api.client.googleapis.services.AbstractGoogleClient$Builder) -> a
-com.example.app.CloudEndpointUtils$1 -> com.example.app.c:
+com.example.app.CloudEndpointUtils$1 -> com.example.app.b:
     boolean val$enableGZip -> a
     void initialize(com.google.api.client.googleapis.services.AbstractGoogleClientRequest) -> a
 com.example.app.FourthActivity -> com.example.app.FourthActivity:
     void onCreate(android.os.Bundle) -> onCreate
     boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.example.app.FourthActivity$1 -> com.example.app.d:
+com.example.app.FourthActivity$1 -> com.example.app.c:
     com.example.app.FourthActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.example.app.FourthActivity$2 -> com.example.app.e:
+com.example.app.FourthActivity$2 -> com.example.app.d:
     com.example.app.FourthActivity this$0 -> a
     void onClick(android.view.View) -> onClick
+com.example.app.IdSQLiteOpenHelper -> com.example.app.e:
+    void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
+    void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
+    void onDowngrade(android.database.sqlite.SQLiteDatabase,int,int) -> onDowngrade
 com.example.app.MainActivity -> com.example.app.MainActivity:
-    boolean alarm_flag -> d
-    int i -> e
-    double latitud -> f
-    double longitud -> g
-    float aceleracion_x -> h
-    float aceleracion_y -> i
-    float aceleracion_z -> j
-    float giroscopio_x -> k
-    float giroscopio_y -> l
-    float giroscopio_z -> m
-    int pulso -> n
-    double tension -> o
-    double azucar -> p
-    int temperatura -> q
-    boolean gas -> r
-    java.lang.String imei -> s
-    java.lang.Long tiempo -> t
-    android.location.LocationManager locationManager -> u
+    boolean alarm_flag -> f
+    int id -> g
+    double latitud -> h
+    double longitud -> i
+    float aceleracion_x0 -> j
+    float delta_aceleracion_x -> k
+    float aceleracion_y0 -> l
+    float delta_aceleracion_y -> m
+    float aceleracion_z0 -> n
+    float delta_aceleracion_z -> o
+    float giroscopio_x0 -> p
+    float delta_giroscopio_x -> q
+    float giroscopio_y0 -> r
+    float delta_giroscopio_y -> s
+    float giroscopio_z0 -> t
+    float delta_giroscopio_z -> u
+    int pulso -> v
+    double tension -> w
+    double azucar -> x
+    int temperatura -> y
+    double gas -> z
+    java.lang.String imei -> A
+    java.lang.Long tiempo -> B
+    android.location.LocationManager locationManager -> C
     boolean isGPSEnabled -> a
     boolean isNetworkEnabled -> b
     boolean canGetLocation -> c
+    java.util.Timer timer -> d
+    java.util.TimerTask llamadaPeriodica -> e
     void onCreate(android.os.Bundle) -> onCreate
+    void onStart() -> onStart
+    void onStop() -> onStop
+    void guardarIDenBD() -> a
+    void recuperarIDdeBD() -> b
     boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     void onAccuracyChanged(android.hardware.Sensor,int) -> onAccuracyChanged
     void onSensorChanged(android.hardware.SensorEvent) -> onSensorChanged
-    void getLatLong() -> a
+    void getLatLong() -> c
     void onLocationChanged(android.location.Location) -> onLocationChanged
     void onProviderDisabled(java.lang.String) -> onProviderDisabled
     void onProviderEnabled(java.lang.String) -> onProviderEnabled
     void onStatusChanged(java.lang.String,int,android.os.Bundle) -> onStatusChanged
-    void valoresBD() -> b
-    int access$0(com.example.app.MainActivity) -> a
-    void access$1(com.example.app.MainActivity,int) -> a
-    double access$2(com.example.app.MainActivity) -> b
-    double access$3(com.example.app.MainActivity) -> c
-    float access$4(com.example.app.MainActivity) -> d
-    float access$5(com.example.app.MainActivity) -> e
-    float access$6(com.example.app.MainActivity) -> f
-    float access$7(com.example.app.MainActivity) -> g
-    float access$8(com.example.app.MainActivity) -> h
-    float access$9(com.example.app.MainActivity) -> i
-    int access$10(com.example.app.MainActivity) -> j
-    double access$11(com.example.app.MainActivity) -> k
-    double access$12(com.example.app.MainActivity) -> l
-    int access$13(com.example.app.MainActivity) -> m
-    boolean access$14(com.example.app.MainActivity) -> n
-    java.lang.String access$15(com.example.app.MainActivity) -> o
-    java.lang.Long access$16(com.example.app.MainActivity) -> p
-    boolean access$17(com.example.app.MainActivity) -> q
-    void access$18(com.example.app.MainActivity,boolean) -> a
-    void access$19(com.example.app.MainActivity,java.lang.Long) -> a
+    void valoresBD() -> d
+    void access$0(com.example.app.MainActivity,java.lang.Long) -> a
+    int access$1(com.example.app.MainActivity) -> a
+    void access$2(com.example.app.MainActivity,int) -> a
+    double access$3(com.example.app.MainActivity) -> b
+    double access$4(com.example.app.MainActivity) -> c
+    float access$5(com.example.app.MainActivity) -> d
+    float access$6(com.example.app.MainActivity) -> e
+    float access$7(com.example.app.MainActivity) -> f
+    float access$8(com.example.app.MainActivity) -> g
+    float access$9(com.example.app.MainActivity) -> h
+    float access$10(com.example.app.MainActivity) -> i
+    int access$11(com.example.app.MainActivity) -> j
+    double access$12(com.example.app.MainActivity) -> k
+    double access$13(com.example.app.MainActivity) -> l
+    int access$14(com.example.app.MainActivity) -> m
+    double access$15(com.example.app.MainActivity) -> n
+    java.lang.String access$16(com.example.app.MainActivity) -> o
+    java.lang.Long access$17(com.example.app.MainActivity) -> p
+    boolean access$18(com.example.app.MainActivity) -> q
+    void access$19(com.example.app.MainActivity,boolean) -> a
+    void access$20(com.example.app.MainActivity,float) -> a
+    void access$21(com.example.app.MainActivity,float) -> b
+    void access$22(com.example.app.MainActivity,float) -> c
+    void access$23(com.example.app.MainActivity,float) -> d
+    void access$24(com.example.app.MainActivity,float) -> e
+    void access$25(com.example.app.MainActivity,float) -> f
+    void access$26(com.example.app.MainActivity,float) -> g
+    void access$27(com.example.app.MainActivity,float) -> h
+    void access$28(com.example.app.MainActivity,float) -> i
+    void access$29(com.example.app.MainActivity,float) -> j
+    void access$30(com.example.app.MainActivity,float) -> k
+    void access$31(com.example.app.MainActivity,float) -> l
 com.example.app.MainActivity$1 -> com.example.app.f:
     com.example.app.MainActivity this$0 -> a
     void run() -> run
@@ -6126,6 +6151,9 @@ com.example.app.ThirdActivity -> com.example.app.ThirdActivity:
 com.example.app.ThirdActivity$1 -> com.example.app.n:
     com.example.app.ThirdActivity this$0 -> a
     void onClick(android.view.View) -> onClick
+com.example.app.ValoresSQLiteOpenHelper -> com.example.app.o:
+    void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
+    void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
 com.example.app.datosendpoint.Datosendpoint -> com.example.app.a.a:
     void initialize(com.google.api.client.googleapis.services.AbstractGoogleClientRequest) -> a
     com.example.app.datosendpoint.Datosendpoint$InsertDatos insertDatos(com.example.app.datosendpoint.model.Datos) -> a
@@ -6156,15 +6184,15 @@ com.example.app.datosendpoint.DatosendpointRequest -> com.example.app.a.d:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient getAbstractGoogleClient() -> b
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> c
 com.example.app.datosendpoint.model.Datos -> com.example.app.a.a.a:
-    java.lang.Float aceleracionX -> aceleracionX
-    java.lang.Float aceleracionY -> aceleracionY
-    java.lang.Float aceleracionZ -> aceleracionZ
+    java.lang.Double aceleracionX -> aceleracionX
+    java.lang.Double aceleracionY -> aceleracionY
+    java.lang.Double aceleracionZ -> aceleracionZ
     java.lang.Boolean alarma -> alarma
     java.lang.Double azucar -> azucar
-    java.lang.Boolean gas -> gas
-    java.lang.Float giroscopioX -> giroscopioX
-    java.lang.Float giroscopioY -> giroscopioY
-    java.lang.Float giroscopioZ -> giroscopioZ
+    java.lang.Double gas -> gas
+    java.lang.Double giroscopioX -> giroscopioX
+    java.lang.Double giroscopioY -> giroscopioY
+    java.lang.Double giroscopioZ -> giroscopioZ
     java.lang.Long id -> id
     java.lang.String imei -> imei
     java.lang.Double latitud -> latitud
@@ -6173,22 +6201,22 @@ com.example.app.datosendpoint.model.Datos -> com.example.app.a.a.a:
     java.lang.Integer temperatura -> temperatura
     java.lang.Double tension -> tension
     java.lang.Long tiempo -> tiempo
-    com.example.app.datosendpoint.model.Datos setAceleracionX(java.lang.Float) -> a
-    com.example.app.datosendpoint.model.Datos setAceleracionY(java.lang.Float) -> b
-    com.example.app.datosendpoint.model.Datos setAceleracionZ(java.lang.Float) -> c
+    com.example.app.datosendpoint.model.Datos setAceleracionX(java.lang.Double) -> a
+    com.example.app.datosendpoint.model.Datos setAceleracionY(java.lang.Double) -> b
+    com.example.app.datosendpoint.model.Datos setAceleracionZ(java.lang.Double) -> c
     com.example.app.datosendpoint.model.Datos setAlarma(java.lang.Boolean) -> a
-    com.example.app.datosendpoint.model.Datos setAzucar(java.lang.Double) -> a
-    com.example.app.datosendpoint.model.Datos setGas(java.lang.Boolean) -> b
-    com.example.app.datosendpoint.model.Datos setGiroscopioX(java.lang.Float) -> d
-    com.example.app.datosendpoint.model.Datos setGiroscopioY(java.lang.Float) -> e
-    com.example.app.datosendpoint.model.Datos setGiroscopioZ(java.lang.Float) -> f
+    com.example.app.datosendpoint.model.Datos setAzucar(java.lang.Double) -> d
+    com.example.app.datosendpoint.model.Datos setGas(java.lang.Double) -> e
+    com.example.app.datosendpoint.model.Datos setGiroscopioX(java.lang.Double) -> f
+    com.example.app.datosendpoint.model.Datos setGiroscopioY(java.lang.Double) -> g
+    com.example.app.datosendpoint.model.Datos setGiroscopioZ(java.lang.Double) -> h
     com.example.app.datosendpoint.model.Datos setId(java.lang.Long) -> a
     com.example.app.datosendpoint.model.Datos setImei(java.lang.String) -> a
-    com.example.app.datosendpoint.model.Datos setLatitud(java.lang.Double) -> b
-    com.example.app.datosendpoint.model.Datos setLongitud(java.lang.Double) -> c
+    com.example.app.datosendpoint.model.Datos setLatitud(java.lang.Double) -> i
+    com.example.app.datosendpoint.model.Datos setLongitud(java.lang.Double) -> j
     com.example.app.datosendpoint.model.Datos setPulso(java.lang.Integer) -> a
     com.example.app.datosendpoint.model.Datos setTemperatura(java.lang.Integer) -> b
-    com.example.app.datosendpoint.model.Datos setTension(java.lang.Double) -> d
+    com.example.app.datosendpoint.model.Datos setTension(java.lang.Double) -> k
     com.example.app.datosendpoint.model.Datos setTiempo(java.lang.Long) -> b
     com.example.app.datosendpoint.model.Datos set(java.lang.String,java.lang.Object) -> a
     com.example.app.datosendpoint.model.Datos clone() -> a

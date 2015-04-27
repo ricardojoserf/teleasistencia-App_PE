@@ -60,8 +60,8 @@ public class SecondActivity extends Activity {
 
 	public void borrarBaseDeDatos() {
 
-		AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,
-				"administracion", null, 4);
+		ValoresSQLiteOpenHelper admin = new ValoresSQLiteOpenHelper(this,
+				"valores", null, 1);
 		SQLiteDatabase bd = admin.getWritableDatabase();
 
 		bd.delete("valores", null, null);
@@ -72,8 +72,8 @@ public class SecondActivity extends Activity {
 
 	public void alta(int input1, int input2, int input3, int input4, int input5) {
 
-		AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,
-				"administracion", null, 4);
+		ValoresSQLiteOpenHelper admin = new ValoresSQLiteOpenHelper(this,
+				"valores", null, 1);
 		SQLiteDatabase bd = admin.getWritableDatabase();
 
 		int pulso 	= input1;
@@ -104,8 +104,8 @@ public class SecondActivity extends Activity {
 	public void cargarBaseDeDatos() {
 
 		// Cargamos los datos anteriores
-		AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,
-				"administracion", null, 4);
+		ValoresSQLiteOpenHelper admin = new ValoresSQLiteOpenHelper(this,
+				"valores", null, 1);
 		SQLiteDatabase bd = admin.getReadableDatabase();
 
 		ContentValues registro = new ContentValues();

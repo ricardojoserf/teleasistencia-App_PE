@@ -1880,13 +1880,11 @@ containing a value of this type.
         public static final int gps_latitud=0x7f0a0031;
         public static final int gps_longitud=0x7f0a0032;
         public static final int hello_world=0x7f0a0011;
-        public static final int humedad=0x7f0a0034;
         public static final int ll_manos=0x7f0a0025;
         public static final int pantalla_de_ayuda=0x7f0a0024;
         public static final int posici_n=0x7f0a0019;
         public static final int pulso=0x7f0a001c;
-        public static final int temp_=0x7f0a0038;
-        public static final int temperatura=0x7f0a0037;
+        public static final int temperatura=0x7f0a0034;
         public static final int tensi_n=0x7f0a001a;
         public static final int test=0x7f0a0016;
         public static final int uso_de_la_app_=0x7f0a002f;
